@@ -29,7 +29,7 @@ def restart():
 def base_install():
     base_packages = list(("xorg",
                  "lightdm",
-                 "lightdm-gtk-greeter"
+                 "lightdm-gtk-greeter",
                  "i3-gaps", 
                  "i3status",
                  "i3blocks",
@@ -52,11 +52,11 @@ def base_install():
     for pkg in base_packages:
         pacman_install(pkg)
 
-def setup_config(username):
-    home_dir = "/home/" + username
-    xec("mkdir -p {0}/.config/i3/ && mkdir -p {0}/.config/alacritty/ ".format(home_dir))
-    xec("mv wall.png {0}/.config/".format(username))
-    xec("mv config {0}/.config/i3/ && mv alacritty.yml {0}/.config/alacritty/ ".format(home_dir))
+def lightdm_config():
+    xec("rm /etc/lightdm/lightdm-gtk-greeter.conf")
+    xec("mv lightdm-gtk-greeter.conf /etc/lightdm/")
+    systemd_enable_service("lightdm.service")
+
 
 def install_config(username):
     git_clone("dev-srjoeraj", "dotfiles-arch")
@@ -76,6 +76,7 @@ def installer():
             
             base_install()
             install_config(sys.argv[2])
+            lightdm_config()
             
 
         elif(sys.argv[1] == "--final"):
