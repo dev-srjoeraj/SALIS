@@ -27,18 +27,27 @@ def restart():
     xec("sudo reboot now")
 
 def base_install():
-    base_packages = list(("xorg", # The entire xorg package.
-                          "i3-gaps", # Tiling window manger. required to complet install
-                          "i3status", # status bar for i3
-                          "lightdm", # Cross platform Display Manager 
-                          "lightdm-gtk-greeter", # Standard greeter for the i3 window manger.
-                          "picom", # Compositor for transparency and other effects.
-                          "feh", # Image viewer. Can be used to set the wallpaper.
-                          "ttf-jetbrains-mono", # Default System Font.
-                          "figlet", # Used to create fancy text.
-                          "alacritty", # Terminal used by the setup in GUI.
-                          "lolcat" # To give random colour to a colourful text.
-                          ))
+    base_packages = list(("xorg",
+                 "lightdm",
+                 "lightdm-gtk-greeter"
+                 "i3-gaps", 
+                 "i3status",
+                 "i3blocks",
+                 "pulseaudio",
+                 "pavucontrol",
+                 "nitrogen",
+                 "picom",
+                 "polkit-gnome",
+                 "rofi",
+                 "terminator",
+                 "alacritty",
+                 "pcmanfm",
+                 "ttf-jetbrains-mono",
+                 "ttf-font-awesome",
+                 "arc-gtk-theme",
+                 "noto-fonts-emoji"
+                 ))
+
 
     for pkg in base_packages:
         pacman_install(pkg)
@@ -46,15 +55,27 @@ def base_install():
 def setup_config(username):
     home_dir = "/home/" + username
     xec("mkdir -p {0}/.config/i3/ && mkdir -p {0}/.config/alacritty/ ".format(home_dir))
+    xec("mv wall.png {0}/.config/".format(username))
     xec("mv config {0}/.config/i3/ && mv alacritty.yml {0}/.config/alacritty/ ".format(home_dir))
+
+def install_config(username):
+    git_clone("dev-srjoeraj", "dotfiles-arch")
+
+    xec("mkdir -p /home/{0}/.statusbar".format(username))
+    xec("mkdir -p /home/{0}/.config".format(username))
+
+    xec("cd dotfiles-arch/config && mv * /home/{0}/.config".format(username))
+    xec("cd dotfiles-arch/statusbar && mv * /home/{0}/.statusbar".format(username))
+    xec("cd /home/{0}/.statusbar && chmod 777 *".format(username))
+
 
 
 def installer():
     if(len(sys.argv) == 3):
         if(sys.argv[1] == "--usr"):
-            setup_config(sys.argv[2])
+            
             base_install()
-            systemd_enable_service("lightdm.service")
+            install_config(sys.argv[2])
             
 
         elif(sys.argv[1] == "--final"):
