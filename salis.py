@@ -54,6 +54,7 @@ def base_install():
 
 def lightdm_config():
     xec("rm /etc/lightdm/lightdm-gtk-greeter.conf")
+    xec("mv wall.png /usr/share/backgrounds")
     xec("mv lightdm-gtk-greeter.conf /etc/lightdm/")
     systemd_enable_service("lightdm.service")
 
@@ -77,6 +78,7 @@ def installer():
             base_install()
             install_config(sys.argv[2])
             lightdm_config()
+            restart()
             
 
         elif(sys.argv[1] == "--final"):
