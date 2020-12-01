@@ -80,7 +80,8 @@ def install_config(username):
 def installer():
     if(len(sys.argv) == 3):
         if(sys.argv[1] == "--usr"):
-            
+
+            create_user(sys.argv[2])                
             base_install()
             install_config(sys.argv[2]) 
             lightdm_config()
