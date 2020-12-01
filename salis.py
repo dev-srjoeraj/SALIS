@@ -29,7 +29,7 @@ def restart():
 def create_user(username):
     xec("useradd -m -p wheel {}".format(username))
     xec("passwd {}".format(username))
-    xec("su {}".format(username))
+    
 
 
 def base_install():
