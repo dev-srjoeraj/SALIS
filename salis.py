@@ -26,6 +26,12 @@ def p(string):
 def restart():
     xec("sudo reboot now")
 
+def create_user(username):
+    xec("useradd -m -p wheel {}".format(username))
+    xec("passwd {}".format(username))
+    xec("su {}".format(username))
+
+
 def base_install():
     base_packages = list(("xorg",
                  "lightdm",
@@ -76,7 +82,7 @@ def installer():
         if(sys.argv[1] == "--usr"):
             
             base_install()
-            install_config(sys.argv[2])
+            install_config(sys.argv[2]) 
             lightdm_config()
             restart()
             
