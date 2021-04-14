@@ -33,6 +33,7 @@ systemctl enable fstrim.timer
 systemctl enable libvirtd
 systemctl enable firewalld
 systemctl enable acpid
+systemctl enable lightdm
 
 useradd -m rohan
 echo rohan:password | chpasswd
